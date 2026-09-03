@@ -235,6 +235,13 @@ def seed(db: Session) -> None:
     db.commit()
 
 
+def seed_if_empty(db: Session) -> bool:
+    if db.query(User).count() > 0:
+        return False
+    seed(db)
+    return True
+
+
 def main() -> None:
     with SessionLocal() as db:
         seed(db)
