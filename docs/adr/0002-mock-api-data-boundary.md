@@ -1,0 +1,5 @@
+# Mock API layer is the single data boundary
+
+There is no real backend yet; the frontend talks to a mock API implemented as plain modules under `frontend/src/api/` (in-memory seeded database, latency wrapper, `ApiError` with machine-readable `code`). Every feature, hook, and page goes through this layer — nothing reads or writes seed data directly. Business rules (vote-once, admin-only actions, owner-or-admin edit, merge dedup, voting closed on terminal statuses) are enforced inside the mock, mirroring a real server, so the UI can't bypass them.
+
+The `backend/` directory is a future real-API placeholder and is out of scope for now. When a real API arrives, only `src/api/` is reimplemented against HTTP calls; hooks, components, and pages are untouched. The mock's latency wrapper and error codes exist specifically to make that swap invisible to the rest of the app.
