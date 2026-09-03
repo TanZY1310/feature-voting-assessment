@@ -5,9 +5,15 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Test cache
+.pytest_cache/
+
 # Virtual environment
 myenv/
 myenv
 venv/
 .venv/
 env/
+
+# Local SQLite database
+*.db

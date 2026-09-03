@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom"
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom"
 import { ShieldAlertIcon } from "lucide-react"
 import { Header } from "./Header"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -14,8 +14,8 @@ function ForbiddenNotice() {
       <div className="space-y-1">
         <h1 className="font-heading text-lg font-medium">403 — Admin access required</h1>
         <p className="text-sm text-muted-foreground">
-          You need the admin role to view this page. Use the role switcher in the header
-          to switch to an admin account.
+          You need the admin role to view this page. Sign in with an admin account
+          (e.g. <span className="font-medium">lee@example.com</span>).
         </p>
       </div>
       <Button variant="outline" size="sm" asChild>
@@ -27,6 +27,7 @@ function ForbiddenNotice() {
 
 export function AdminShell() {
   const { user, isPending } = useSession()
+  const location = useLocation()
 
   if (isPending) {
     return (
@@ -43,7 +44,11 @@ export function AdminShell() {
     )
   }
 
-  if (user?.role !== "admin") {
+  if (!user) {
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  }
+
+  if (user.role !== "admin") {
     return (
       <div className="flex min-h-dvh flex-col">
         <Header />

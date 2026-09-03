@@ -1,13 +1,13 @@
-import { ChevronDownIcon } from "lucide-react"
+import { Link, useNavigate } from "react-router-dom"
+import { ChevronDownIcon, LogOutIcon } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -22,9 +22,17 @@ function initials(name) {
     .toUpperCase()
 }
 
-export function RoleSwitcher() {
-  const { user, switchRole } = useSession()
-  if (!user) return null
+export function UserMenu() {
+  const { user, logout } = useSession()
+  const navigate = useNavigate()
+
+  if (!user) {
+    return (
+      <Button size="sm" asChild>
+        <Link to="/login">Sign in</Link>
+      </Button>
+    )
+  }
 
   return (
     <DropdownMenu>
@@ -42,17 +50,17 @@ export function RoleSwitcher() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-44">
         <DropdownMenuLabel>
-          Signed in as <span className="font-medium text-foreground">{user.name}</span>
+          Signed in as{" "}
+          <span className="font-medium text-foreground">{user.name}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuLabel className="text-xs">Dev role switcher</DropdownMenuLabel>
-        <DropdownMenuRadioGroup
-          value={user.role}
-          onValueChange={(role) => switchRole.mutate(role)}
+        <DropdownMenuItem
+          variant="destructive"
+          onSelect={() => logout.mutate(undefined, { onSettled: () => navigate("/") })}
         >
-          <DropdownMenuRadioItem value="user">View as User</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="admin">View as Admin</DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
+          <LogOutIcon />
+          Sign out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

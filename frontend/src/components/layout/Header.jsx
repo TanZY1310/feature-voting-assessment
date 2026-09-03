@@ -5,7 +5,7 @@ import { Link, NavLink } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useSession } from "@/hooks/useSession"
-import { RoleSwitcher } from "./RoleSwitcher"
+import { UserMenu } from "./UserMenu"
 
 const navItem = ({ isActive }) =>
   cn(
@@ -63,7 +63,7 @@ export function Header() {
               New request
             </Link>
           </Button>
-          <RoleSwitcher />
+          <UserMenu />
         </div>
       </div>
     </header>

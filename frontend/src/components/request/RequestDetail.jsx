@@ -23,6 +23,7 @@ import { CommentComposer } from "@/components/comment/CommentComposer"
 import { CommentList } from "@/components/comment/CommentList"
 import { StatusChangeMenu } from "@/components/admin/StatusChangeMenu"
 import { MergeDialog } from "@/components/admin/MergeDialog"
+import { ACTIVE_STATUSES } from "@/api/types"
 import { useSession } from "@/hooks/useSession"
 import { useDeleteRequest } from "@/hooks/useDeleteRequest"
 import { formatDate, formatRelative, getErrorMessage } from "@/lib/format"
@@ -84,6 +85,7 @@ export function RequestDetail({ request }) {
   const isAdmin = user?.role === "admin"
   const isAuthor = user?.id === request.author.id
   const isRedirected = request.status === "redirected"
+  const isVotingOpen = ACTIVE_STATUSES.includes(request.status)
 
   return (
     <article className="space-y-6">
@@ -117,10 +119,10 @@ export function RequestDetail({ request }) {
             requestId={request.id}
             support={request.support}
             votedByMe={request.votedByMe}
-            canVote={request.canVote}
+            canVote={isVotingOpen}
             className="min-w-20"
           />
-          {!request.canVote && (
+          {!isVotingOpen && (
             <span className="text-xs text-muted-foreground">Voting is closed</span>
           )}
           {isAdmin && !isRedirected && (

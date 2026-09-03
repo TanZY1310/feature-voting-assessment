@@ -1,0 +1,5 @@
+# Frontend API layer is a real HTTP client
+
+The frontend mock API (`frontend/src/api/db.js` and `endpoints/`) is removed; `frontend/src/api/client.js` now performs real `fetch` calls against the FastAPI backend, keeping the same method surface so hooks, components, and pages are untouched. This executes the swap boundary recorded in ADR-0002. The base URL comes from `VITE_API_URL` (default `http://localhost:8000`) with CORS handled by the backend.
+
+Authentication moved from the mock dev role switcher to the real JWT flow (ADR-0005): the frontend stores the token in `localStorage`, sends `Authorization: Bearer` on every request, and clears it on a 401. The role switcher is replaced by a login page and a user menu, and the mock smoke test (`frontend/scripts/api-smoke.mjs`) is deleted in favor of the backend pytest suite.

@@ -1,14 +1,16 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from "react-router-dom"
 import { Toaster } from "@/components/ui/sonner"
 import { AppShell } from "@/components/layout/AppShell"
 import { AdminShell } from "@/components/layout/AdminShell"
 import { BrowsePage } from "@/pages/BrowsePage"
+import { LoginPage } from "@/pages/LoginPage"
 import { RequestDetailPage } from "@/pages/RequestDetailPage"
 import { SubmitRequestPage } from "@/pages/SubmitRequestPage"
 import { EditRequestPage } from "@/pages/EditRequestPage"
 import { ReviewPage } from "@/pages/admin/ReviewPage"
 import { StatsPage } from "@/pages/admin/StatsPage"
+import { useSession } from "@/hooks/useSession"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,6 +20,14 @@ const queryClient = new QueryClient({
     },
   },
 })
+
+function RequireAuth({ children }) {
+  const location = useLocation()
+  const { user, isPending } = useSession()
+  if (isPending) return null
+  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  return children
+}
 
 function NotFoundPage() {
   return (
@@ -39,10 +49,39 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppShell />}>
-            <Route path="/" element={<BrowsePage />} />
-            <Route path="/requests/new" element={<SubmitRequestPage />} />
-            <Route path="/requests/:id" element={<RequestDetailPage />} />
-            <Route path="/requests/:id/edit" element={<EditRequestPage />} />
+            <Route
+              path="/"
+              element={
+                <RequireAuth>
+                  <BrowsePage />
+                </RequireAuth>
+              }
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/requests/new"
+              element={
+                <RequireAuth>
+                  <SubmitRequestPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/requests/:id"
+              element={
+                <RequireAuth>
+                  <RequestDetailPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/requests/:id/edit"
+              element={
+                <RequireAuth>
+                  <EditRequestPage />
+                </RequireAuth>
+              }
+            />
           </Route>
           <Route element={<AdminShell />}>
             <Route path="/admin/review" element={<ReviewPage />} />

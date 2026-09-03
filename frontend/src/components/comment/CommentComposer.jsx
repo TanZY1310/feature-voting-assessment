@@ -1,14 +1,37 @@
 import { useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
-import { Loader2Icon, SendIcon } from "lucide-react"
+import { Loader2Icon, LogInIcon, SendIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useComment } from "@/hooks/useComment"
+import { useSession } from "@/hooks/useSession"
 import { getErrorMessage } from "@/lib/format"
 
 export function CommentComposer({ requestId }) {
   const [body, setBody] = useState("")
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { user } = useSession()
   const mutation = useComment(requestId)
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-dashed px-4 py-3">
+        <p className="text-sm text-muted-foreground">
+          Sign in to join the discussion.
+        </p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => navigate("/login", { state: { from: location.pathname + location.search } })}
+        >
+          <LogInIcon data-icon="inline-start" className="size-4" />
+          Sign in
+        </Button>
+      </div>
+    )
+  }
 
   const submit = () => {
     if (!body.trim()) return

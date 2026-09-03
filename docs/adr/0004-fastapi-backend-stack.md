@@ -1,0 +1,5 @@
+# FastAPI backend on SQLite + SQLAlchemy + Alembic
+
+The real backend is a FastAPI service (Python 3.12) over SQLite with SQLAlchemy 2.0 and Alembic migrations, mirroring the mock API contract exactly. This supersedes the "backend is a future placeholder" note in ADR-0002: `frontend/src/api/` remains the swap boundary, and the backend now implements the same endpoints, camelCase DTO shapes, error codes, and business rules.
+
+We chose FastAPI because it gives fast REST development with typed Pydantic schemas (matching the JS DTOs via a camelCase alias generator), and SQLite because it is zero-config for local development while still providing real transactions and constraints. Alembic was chosen from the start so the schema is versioned as it evolves. Vote-once is enforced by a `UNIQUE(user_id, request_id)` constraint plus `INSERT OR IGNORE` (a repeat `PUT /vote` is a true no-op), never an application-level check; Support is computed as `COUNT(*)` of vote rows, not a stored counter.
