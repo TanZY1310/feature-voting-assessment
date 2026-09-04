@@ -167,4 +167,27 @@ npm run dev
 
 Sign in with a seeded dev account: admin `lee@example.com` or user `sam@example.com`, password `password`.
 
-Verify: `npm run lint` and `npm run build` must stay clean.
+## Scope of requirements
+
+### User-facing
+
+- **Browse feature requests** with search, filter and sort controls — Complete.
+- **Submit a new request** and view request details — Complete.
+- **Vote for a request** and remove an existing vote — Complete.
+- **Add comments** and display vote and comment counts — Complete.
+- **Show request progress** using the supported status model — Complete.
+  - *Assumption:* Status `declined` is not part of the request progress.
+
+### Admin
+
+- **Review submitted requests** and change request status — Complete.
+- **Merge duplicate requests** while preserving associated activity — Complete.
+  - *Assumption:* Merged requests will be listed under the main request and the vote count is added.
+- **Add an official response** — Complete.
+  - *Assumption:* Only admin is allowed to post official response and have a separate view alongside comments.
+- **Show a small set of useful usage statistics** — Complete.
+
+### Additional requirements
+
+- **Authentication** — Partial.
+  - *Assumption:* No registration, all user data are seeded.
