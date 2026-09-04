@@ -30,10 +30,7 @@ Useful commands:
 
 Environment: `.env.example` ships with safe dev defaults only — no secrets. `JWT_SECRET` and `JWT_EXPIRE_MINUTES` configure backend auth; override `JWT_SECRET` in your own `.env` (never commit it).
 
-## API contract
-
-The backend implements the contract below. Responses and error codes match the original mock exactly: camelCase DTOs, `ApiError` with a machine-readable `code`, and server-side rule enforcement.
-
+## API
 | Method   | Path                     | Access          | Description                                                                                           |
 | -------- | ------------------------ | --------------- | ----------------------------------------------------------------------------------------------------- |
 | `POST`   | `/auth/login`            | public          | Email/password → `{ token, user }`                                                                    |
